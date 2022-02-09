@@ -1,3 +1,8 @@
 .header {
   grid-area: header;
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background-color: #fff;
+  border-bottom: 1px solid #ebebeb;
 }

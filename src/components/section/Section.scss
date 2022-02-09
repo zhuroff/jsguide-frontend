@@ -1,0 +1,18 @@
+.section {
+  min-height: calc(100vh - 65px);
+  grid-area: section;
+  position: relative;
+  z-index: 1000;
+  background-color: #f7fdfd;
+}
+
+.article {
+  padding: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+  line-height: 26px;
+
+  p {
+    margin-bottom: 20px;
+  }
+}

@@ -1,6 +1,8 @@
 const MainPage = () => {
   return (
-    <h1>Main Page</h1>
+    <article className="article">
+      <h1>Main Page</h1>
+    </article>
   )
 }
 

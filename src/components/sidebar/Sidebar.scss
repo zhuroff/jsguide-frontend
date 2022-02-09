@@ -1,5 +1,10 @@
 .sidebar {
-  background-color: rgba(245,247,249,1.00);
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
   grid-area: sidebar;
+  position: sticky;
+  top: 0;
+  z-index: 3000;
+  background-color: #fff;
+  border-right: 1px solid #ebebeb;
 }

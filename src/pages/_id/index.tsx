@@ -32,14 +32,14 @@ const InnerPage = () => {
   }, [])
 
   return (
-    <section className="section">
+    <article className="article">
       { article !== null &&
         <>
           <h1>{ article.title }</h1>
           <div dangerouslySetInnerHTML={{__html: article.article}}></div>
         </>
       }
-    </section>
+    </article>
   )
 }
 

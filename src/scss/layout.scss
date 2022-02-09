@@ -1,8 +1,13 @@
 .main {
+  font-family: 'Source Serif 4', sans-serif;
   min-height: 100vh;
   display: grid;
   grid-template-rows: 65px 1fr;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 250px 1fr;
   grid-template-areas: 'sidebar header'
-                       'sidebar article';
+                       'sidebar section';
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', monospace;
 }
