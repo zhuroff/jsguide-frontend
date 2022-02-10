@@ -1,19 +1,24 @@
-import { useState } from 'react'
-import { UserData } from '../../types/Global'
-import { api } from '../../Api'
+import { useContext, useState, BaseSyntheticEvent } from 'react'
+import { AuthData } from '../../types/Global'
+// import { api } from '../../Api'
+import { Context } from 'index'
+import Input from 'components/input/Input'
+import Button from 'components/button/Button'
 
-type RegisterData = UserData & Partial<{
+type RegisterData = AuthData & Partial<{
   passwordConfirm: string
 }>
 
 const RegistrationForm = () => {
+  const { store } = useContext(Context)
+
   const [registerData, setRegisterData] = useState<RegisterData>({
     login: '',
     password: '',
     passwordConfirm: ''
   })
 
-  const register = async (event: any) => {
+  const formSubmit = async (event: any) => {
     event.preventDefault()
 
     const { login, password, passwordConfirm } = registerData
@@ -22,24 +27,47 @@ const RegistrationForm = () => {
       return alert('Пароли не совпадают!')
     }
 
-    try {
-      const response = await api.post('/api/user/registration', { login, password })
-      console.log(response)
-    } catch (error) {
-      throw error
-    }
+    store.registration({ login, password })
+
+    // try {
+    //   const response = await api.post('/api/user/registration', { login, password })
+    //   console.log(response)
+    // } catch (error) {
+    //   throw error
+    // }
   }
 
-  const setRegData = (payload: RegisterData) => {
+  const updateRegistrationData = (payload: RegisterData) => {
     setRegisterData({ ...registerData, ...payload })
   }
 
   return (
-    <form onSubmit={ register }>
-      <input type="text" placeholder="login" onInput={ (event: any) => setRegData({ login: event.target.value }) } />
-      <input type="password" placeholder="password" onInput={ (event: any) => setRegData({ password: event.target.value }) } />
-      <input type="password" placeholder="Confirm password" onInput={ (event: any) => setRegData({ passwordConfirm: event.target.value }) } />
-      <button type="submit">Send</button>
+    <form onSubmit={ formSubmit }>
+      <Input
+        type="text"
+        value={ registerData.login }
+        placeholder="Login"
+        onInput={ (event: BaseSyntheticEvent) => updateRegistrationData({ login: event.target.value }) }
+      />
+
+      <Input
+        type="password"
+        value={ registerData.password }
+        placeholder="Password"
+        onInput={ (event: BaseSyntheticEvent) => updateRegistrationData({ password: event.target.value }) }
+      />
+
+      <Input
+        type="password"
+        value={ registerData.passwordConfirm }
+        placeholder="Confirm password"
+        onInput={ (event: BaseSyntheticEvent) => updateRegistrationData({ passwordConfirm: event.target.value }) }
+      />
+
+      <Button
+        type="submit"
+        text="Зарегистрироваться"
+      />
     </form>
   )
 }

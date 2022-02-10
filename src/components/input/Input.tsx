@@ -3,10 +3,11 @@ import './Input.scss'
 type InputProps = {
   type: 'text' | 'number' | 'email' | 'password' | 'checkbox' | 'radio'
   placeholder?: string
+  value?: string
   onInput: (event: any) => void
 }
 
-const Input = ({ type, placeholder, onInput }: InputProps) => {
+const Input = ({ type, placeholder, value, onInput }: InputProps) => {
   return (
     <div className="input">
       {
@@ -15,6 +16,7 @@ const Input = ({ type, placeholder, onInput }: InputProps) => {
           <input
             type={ type }
             placeholder={ placeholder && placeholder }
+            value={ value && value }
             onInput={ onInput }
             className="input__text"
             spellCheck="false"
