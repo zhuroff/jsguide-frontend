@@ -1,25 +1,17 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { ILinks } from '../../types/Global'
-import { routes, api } from '../../Api'
-
-interface IArticle {
-  _id: string
-  title: string
-  dateCreated: string
-  article: string
-  links: ILinks[]
-}
+import { useParams } from 'react-router-dom'
+import ArticlesServices from 'services/ArticlesService'
+import { ArticlesResponse } from 'types/Responses'
 
 const InnerPage = () => {
-  const location = useLocation()
-  const [article, setArticle] = useState<IArticle | null>(null)
+  const params = useParams()
+  const [article, setArticle] = useState<ArticlesResponse | null>(null)
 
-  const fetchArticle = async (url: string) => {
+  const fetchArticle = async (id: string = '')  => {
     try {
-      const response = await api.get(url)
+      const response = await ArticlesServices.article(id)
       
-      if (response.status === 200) {
+      if (response?.status === 200) {
         setArticle(response.data)
       }
     } catch (error) {
@@ -28,7 +20,7 @@ const InnerPage = () => {
   }
 
   useEffect(() => {
-    fetchArticle(`${routes.articles}${location.pathname}`)
+    fetchArticle(params.id)
   }, [])
 
   return (

@@ -19,9 +19,22 @@ interface ILinks {
   url: string
 }
 
+interface IDocumentBasic {
+  _id: string
+  title: string
+}
+
+interface IRequestConfig {
+  page: number,
+  limit: number,
+  sort: { [index: string]: number }
+}
+
 export {
   ILinks,
   AuthData,
   UserData,
-  State
+  State,
+  IDocumentBasic,
+  IRequestConfig
 }
