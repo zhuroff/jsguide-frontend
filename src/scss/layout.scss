@@ -8,6 +8,17 @@
                        'sidebar section';
 }
 
-code, pre {
+code,
+pre,
+input,
+textarea,
+button {
   font-family: 'JetBrains Mono', monospace;
+}
+
+input,
+textarea,
+button {
+  font-weight: 600;
+  font-size: 16px;
 }

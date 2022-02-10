@@ -1,3 +1,5 @@
+import './Input.scss'
+
 type InputProps = {
   type: 'text' | 'number' | 'email' | 'password' | 'checkbox' | 'radio'
   placeholder?: string
@@ -15,6 +17,7 @@ const Input = ({ type, placeholder, onInput }: InputProps) => {
             placeholder={ placeholder && placeholder }
             onInput={ onInput }
             className="input__text"
+            spellCheck="false"
           />
         </>
       }
