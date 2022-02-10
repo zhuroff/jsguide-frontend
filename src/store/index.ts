@@ -1,6 +1,8 @@
 import { makeAutoObservable } from 'mobx'
-import AuthService from 'services/AuthService'
 import { AuthData, UserData } from 'types/Global'
+import { AuthResponse } from 'types/Responses'
+import AuthService from 'services/AuthService'
+import axios from 'axios'
 
 export default class Store {
   user = {} as UserData
@@ -58,6 +60,21 @@ export default class Store {
         this.setAuth(false)
         this.setUser({} as UserData )
       //}
+    } catch (error: any) {
+      console.log(error.response?.data?.message)
+    }
+  }
+
+  async checkAuth() {
+    try {
+      const response = await axios.get<AuthResponse>(
+        `${process.env['REACT_APP_SERVER_HOST']}/api/user/refresh`,
+        { withCredentials: true }
+      )
+
+      localStorage.setItem('token', response.data.accessToken)
+      this.setAuth(true)
+      this.setUser(response.data.user)
     } catch (error: any) {
       console.log(error.response?.data?.message)
     }

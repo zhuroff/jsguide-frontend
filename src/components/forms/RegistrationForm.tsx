@@ -4,6 +4,7 @@ import { AuthData } from '../../types/Global'
 import { Context } from 'index'
 import Input from 'components/input/Input'
 import Button from 'components/button/Button'
+import { observer } from 'mobx-react-lite'
 
 type RegisterData = AuthData & Partial<{
   passwordConfirm: string
@@ -72,4 +73,4 @@ const RegistrationForm = () => {
   )
 }
 
-export default RegistrationForm
+export default observer(RegistrationForm)

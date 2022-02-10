@@ -35,7 +35,7 @@ const InnerPage = () => {
         <div className="actions">
           <Button
             text="Редактировать"
-            onClick={ () => navigate('edit', { replace: true }) }
+            href="edit"
           />
 
           <Button

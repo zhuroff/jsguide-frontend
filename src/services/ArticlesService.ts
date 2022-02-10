@@ -11,4 +11,8 @@ export default abstract class ArticlesServices {
   static async article(id: string): Promise<AxiosResponse<ArticlesResponse>> {
     return api.get<ArticlesResponse>(`api/articles/${id}`)
   }
+
+  static async update(payload: ArticlesResponse): Promise<AxiosResponse<ArticlesResponse>> {
+    return api.patch<ArticlesResponse>(`api/articles/${payload._id}`, payload)
+  }
 }
