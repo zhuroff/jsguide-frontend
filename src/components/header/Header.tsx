@@ -1,12 +1,14 @@
-import { useCallback, BaseSyntheticEvent } from 'react'
+import { useCallback, BaseSyntheticEvent, useState } from 'react'
 import Input from '../input/Input'
+import LoginForm from 'components/forms/LoginForm'
+import RegistrationForm from 'components/forms/RegistrationForm'
 import debounce from '../../shared/debounce'
 import './Header.scss'
+import FloatModal from 'components/modals/FloatModal'
 
 const Header = () => {
-  const showLoginForm = () => {
-    console.log('Login')
-  }
+  const [isLoginForm, setLoginFormState] = useState(false)
+  const [isRegisterForm, setRegisterFormState] = useState(false)
 
   const sendQueryRequest = async (value: string) => {
     try {
@@ -20,8 +22,14 @@ const Header = () => {
 
   const searchQuerySplitter = (value: string) => {
     if (value === 'login') {
-      showLoginForm()
+      setRegisterFormState(false)
+      setLoginFormState(true)
+    } else if (value === 'register') {
+      setLoginFormState(false)
+      setRegisterFormState(true)
     } else {
+      setLoginFormState(false)
+      setRegisterFormState(false)
       sendQueryRequest(value)
     }
   }
@@ -30,11 +38,25 @@ const Header = () => {
 
   return (
     <header className="header">
-      <Input
-        type="text"
-        placeholder="search"
-        onInput={ (event: BaseSyntheticEvent) => debouncedHandler(event.target.value) }
-      />
+      <div className="header__search">
+        <Input
+          type="text"
+          placeholder="Search"
+          onInput={ (event: BaseSyntheticEvent) => debouncedHandler(event.target.value) }
+        />
+
+        { isLoginForm &&
+          <FloatModal>
+            <LoginForm />
+          </FloatModal>
+        }
+
+        { isRegisterForm &&
+          <FloatModal>
+            <RegistrationForm />
+          </FloatModal>
+        }
+      </div>
     </header>
   )
 }

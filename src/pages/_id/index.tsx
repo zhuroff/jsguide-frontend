@@ -1,13 +1,13 @@
 import { useEffect, useState, useContext } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { ArticlesResponse } from 'types/Responses'
 import ArticlesServices from 'services/ArticlesService'
 import Button from 'components/button/Button'
 import { Context } from 'index'
+import { observer } from 'mobx-react-lite'
 
 const InnerPage = () => {
   const params = useParams()
-  const navigate = useNavigate()
   const { store } = useContext(Context)
 
   const [article, setArticle] = useState<ArticlesResponse | null>(null)
@@ -57,4 +57,4 @@ const InnerPage = () => {
   )
 }
 
-export default InnerPage
+export default observer(InnerPage)

@@ -5,4 +5,13 @@
   z-index: 2000;
   background-color: #fff;
   border-bottom: 1px solid #ebebeb;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+
+  &__search {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+  }
 }

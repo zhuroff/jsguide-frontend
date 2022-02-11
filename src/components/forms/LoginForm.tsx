@@ -1,12 +1,11 @@
-// import { api } from 'Api'
-import { useState, FC, BaseSyntheticEvent, useContext } from 'react'
+import { useState, BaseSyntheticEvent, useContext } from 'react'
 import { AuthData } from 'types/Global'
 import Input from 'components/input/Input'
 import Button from 'components/button/Button'
 import { Context } from 'index'
 import { observer } from 'mobx-react-lite'
 
-const LoginForm: FC = () => {
+const LoginForm = () => {
   const { store } = useContext(Context)
 
   const [loginData, setLoginData] = useState<AuthData>({
@@ -14,15 +13,8 @@ const LoginForm: FC = () => {
     password: ''
   })
 
-  const formSubmit = async (event: any) => {
+  const formSubmit = async (event: BaseSyntheticEvent) => {
     event.preventDefault()
-
-    // try {
-    //   const response = await api.post('/api/user/login', loginData)
-    //   console.log(response)
-    // } catch (error) {
-    //   throw error
-    // }
     store.login(loginData)
   }
 

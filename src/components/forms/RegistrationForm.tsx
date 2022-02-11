@@ -1,6 +1,5 @@
 import { useContext, useState, BaseSyntheticEvent } from 'react'
 import { AuthData } from '../../types/Global'
-// import { api } from '../../Api'
 import { Context } from 'index'
 import Input from 'components/input/Input'
 import Button from 'components/button/Button'
@@ -19,7 +18,7 @@ const RegistrationForm = () => {
     passwordConfirm: ''
   })
 
-  const formSubmit = async (event: any) => {
+  const formSubmit = async (event: BaseSyntheticEvent) => {
     event.preventDefault()
 
     const { login, password, passwordConfirm } = registerData
@@ -29,13 +28,6 @@ const RegistrationForm = () => {
     }
 
     store.registration({ login, password })
-
-    // try {
-    //   const response = await api.post('/api/user/registration', { login, password })
-    //   console.log(response)
-    // } catch (error) {
-    //   throw error
-    // }
   }
 
   const updateRegistrationData = (payload: RegisterData) => {

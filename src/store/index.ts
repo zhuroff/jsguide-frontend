@@ -23,7 +23,6 @@ export default class Store {
   async login({ login = '', password = '' }: AuthData) {
     try {
       const response = await AuthService.login(login, password)
-      console.log(response)
 
       if (response?.status === 200) {
         localStorage.setItem('token', response.data.accessToken)
@@ -40,7 +39,6 @@ export default class Store {
       const response = await AuthService.registration(login, password)
 
       if (response?.status === 201) {
-        console.log(response.data)
         localStorage.setItem('token', response.data.accessToken)
         this.setAuth(true)
         this.setUser(response.data.user)
@@ -53,7 +51,6 @@ export default class Store {
   async logout() {
     try {
       const response = await AuthService.logout()
-      console.log(response)
 
       //if (response?.status === 200) {
         localStorage.removeItem('token')
