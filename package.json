@@ -36,6 +36,9 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
+    "@tiptap/core": "^2.0.0-beta.174",
+    "@tiptap/react": "^2.0.0-beta.108",
+    "@tiptap/starter-kit": "^2.0.0-beta.183",
     "@types/axios": "^0.14.0",
     "axios": "^0.25.0",
     "mobx": "^6.3.13",

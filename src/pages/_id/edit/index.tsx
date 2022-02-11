@@ -1,23 +1,34 @@
 import { Context } from 'index'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArticlesResponse } from 'types/Responses'
-import ArticlesServices from 'services/ArticlesService'
+import ArticlesServices from 'services/ArticlesServices'
 import Button from 'components/button/Button'
+import Editor from 'components/editor/Editor'
+import { ArticleData } from 'types/Article'
+import { observer } from 'mobx-react-lite'
 
 const InnerPageEdit = () => {
   const navigate = useNavigate()
   const params = useParams()
+
   const { store } = useContext(Context)
 
-  const [article, setArticle] = useState<ArticlesResponse | null>(null)
+  const [content, setContent] = useState('')
+  const [pageData, setPageData] = useState<ArticleData>({
+    title: '',
+    links: []
+  })
 
   const fetchArticle = async (id: string = '')  => {
     try {
       const response = await ArticlesServices.article(id)
       
       if (response?.status === 200) {
-        setArticle(response.data)
+        setContent(response.data.article)
+        setPageData({
+          title: response.data.title,
+          links: response.data.links
+        })
       }
     } catch (error) {
       console.error(error)
@@ -25,13 +36,19 @@ const InnerPageEdit = () => {
   }
 
   const update = async () => {
-    if (article) {
-      try {
-        const response = await ArticlesServices.update(article)
-        console.log(response)
-      } catch (error) {
-        console.error(error)
-      }
+    try {
+      const response = await ArticlesServices.update(
+        params.id || '',
+        {
+          title: pageData.title,
+          links: pageData.links,
+          article: content
+        }
+      )
+
+      console.log(response)
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -46,7 +63,7 @@ const InnerPageEdit = () => {
   return (
     <>
       {
-        store.isAuth &&
+        (store.isAuth && store.user.isAdmin) &&
         <div className="actions">
           <Button
             text="Сохранить"
@@ -61,15 +78,14 @@ const InnerPageEdit = () => {
       }
 
       <article className="article">
-        { article !== null &&
-          <>
-            <h1 contentEditable dangerouslySetInnerHTML={{__html: article.title}}></h1>
-            <div contentEditable dangerouslySetInnerHTML={{__html: article.article}}></div>
-          </>
-        }
+        <h1 contentEditable dangerouslySetInnerHTML={{ __html: pageData.title }}></h1>
+        <Editor
+          content={ content }
+          updateEditorState={ (value: string) => setContent(value) }
+        />
       </article>
     </>
   )
 }
 
-export default InnerPageEdit
+export default observer(InnerPageEdit)

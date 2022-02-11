@@ -1,12 +1,16 @@
-import { useCallback, BaseSyntheticEvent, useState } from 'react'
+import { useCallback, BaseSyntheticEvent, useState, useContext } from 'react'
 import Input from '../input/Input'
 import LoginForm from 'components/forms/LoginForm'
 import RegistrationForm from 'components/forms/RegistrationForm'
 import debounce from '../../shared/debounce'
-import './Header.scss'
 import FloatModal from 'components/modals/FloatModal'
+import { observer } from 'mobx-react-lite'
+import { Context } from 'index'
+import './Header.scss'
 
 const Header = () => {
+  const { store } = useContext(Context)
+
   const [isLoginForm, setLoginFormState] = useState(false)
   const [isRegisterForm, setRegisterFormState] = useState(false)
 
@@ -21,12 +25,14 @@ const Header = () => {
   }
 
   const searchQuerySplitter = (value: string) => {
-    if (value === 'login') {
+    if (value === process.env.REACT_APP_SLOG) {
       setRegisterFormState(false)
       setLoginFormState(true)
-    } else if (value === 'register') {
+    } else if (value ===  process.env.REACT_APP_SREG) {
       setLoginFormState(false)
       setRegisterFormState(true)
+    } else if (value === process.env.REACT_APP_SOUT) {
+      store.logout()
     } else {
       setLoginFormState(false)
       setRegisterFormState(false)
@@ -61,4 +67,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default observer(Header)

@@ -52,11 +52,11 @@ export default class Store {
     try {
       const response = await AuthService.logout()
 
-      //if (response?.status === 200) {
+      if (response?.status === 200) {
         localStorage.removeItem('token')
         this.setAuth(false)
         this.setUser({} as UserData )
-      //}
+      }
     } catch (error: any) {
       console.log(error.response?.data?.message)
     }

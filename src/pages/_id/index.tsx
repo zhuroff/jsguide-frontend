@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { ArticlesResponse } from 'types/Responses'
-import ArticlesServices from 'services/ArticlesService'
+import ArticlesServices from 'services/ArticlesServices'
 import Button from 'components/button/Button'
 import { Context } from 'index'
 import { observer } from 'mobx-react-lite'
@@ -31,7 +31,7 @@ const InnerPage = () => {
   return (
     <>
       {
-        store.isAuth &&
+        (store.isAuth && store.user.isAdmin) &&
         <div className="actions">
           <Button
             text="Редактировать"

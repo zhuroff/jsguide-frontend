@@ -1,4 +1,5 @@
 import { IDocumentBasic, ILinks, UserData } from 'types/Global'
+import { ArticleData, ArticleContent } from './Article'
 
 interface AuthResponse {
   accessToken: string
@@ -14,11 +15,8 @@ interface NavigationResponse {
   docs: IDocumentBasic[]
 }
 
-interface ArticlesResponse {
-  article: string
+interface ArticlesResponse extends ArticleData, ArticleContent {
   dateCreated: string
-  links: ILinks[]
-  title: string
   _id: string
 }
 

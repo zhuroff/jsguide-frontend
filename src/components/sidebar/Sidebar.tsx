@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import ArticlesServices from 'services/ArticlesService'
+import ArticlesServices from 'services/ArticlesServices'
 import { IDocumentBasic, IRequestConfig } from 'types/Global'
 import './Sidebar.scss'
 

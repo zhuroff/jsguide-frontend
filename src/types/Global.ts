@@ -8,6 +8,7 @@ type AuthData = Partial<{
 interface UserData {
   login: string
   _id: string
+  isAdmin: boolean
 }
 
 interface State {

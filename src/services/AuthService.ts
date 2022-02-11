@@ -11,7 +11,7 @@ export default abstract class AuthService {
     return api.post<AuthResponse>('api/user/registration', { login, password })
   }
 
-  static async logout(): Promise<void> {
-    return api.post('user/logout')
+  static async logout(): Promise<AxiosResponse> {
+    return api.post('api/user/logout')
   }
 }
