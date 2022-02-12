@@ -3,7 +3,7 @@
   grid-area: section;
   position: relative;
   z-index: 1000;
-  background-color: #f7fdfd;
+  background-color: #fff;
 
   .actions {
     padding: 30px 30px 0;
@@ -23,7 +23,84 @@
   margin: 0 auto;
   line-height: 26px;
 
+  .ProseMirror {
+    outline: none;
+    padding-top: 20px;
+
+    & > *:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &__title {
+    margin-bottom: 30px;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 38px;
+    outline: none;
+  }
+
+  h2 {
+    font-size: 22px;
+    margin: 40px 0 10px;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 18px;
+    margin: 30px 0 0;
+    font-weight: 600;
+  }
+
   p {
     margin-bottom: 20px;
+  }
+
+  a {
+    color: #767676;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  ul, ol {
+    margin: 20px 0;
+    padding-left: 50px;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  li > p {
+    margin-bottom: 0;
+  }
+
+  code {
+    font-size: 14px;
+    font-weight: 600;
+    color: #343030;
+  }
+
+  pre {
+    margin: 20px 0;
+    padding: 20px 25px;
+    border: 2px dashed #767676;
+    background-color: #fffaed;
+  }
+
+  blockquote {
+    margin: 50px 0 50px 50px;
+    border-left: 3px solid #343030;
+    padding: 10px 20px 10px 30px;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 30px;
+    max-width: 750px;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
   }
 }

@@ -1,16 +1,14 @@
-import { useCallback, BaseSyntheticEvent, useState, useContext } from 'react'
-import Input from '../input/Input'
+import { useCallback, BaseSyntheticEvent, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import Input from 'components/input/Input'
 import LoginForm from 'components/forms/LoginForm'
 import RegistrationForm from 'components/forms/RegistrationForm'
-import debounce from '../../shared/debounce'
+import debounce from 'shared/debounce'
 import FloatModal from 'components/modals/FloatModal'
-import { observer } from 'mobx-react-lite'
-import { Context } from 'index'
+import user from 'store/User'
 import './Header.scss'
 
 const Header = () => {
-  const { store } = useContext(Context)
-
   const [isLoginForm, setLoginFormState] = useState(false)
   const [isRegisterForm, setRegisterFormState] = useState(false)
 
@@ -32,7 +30,7 @@ const Header = () => {
       setLoginFormState(false)
       setRegisterFormState(true)
     } else if (value === process.env.REACT_APP_SOUT) {
-      store.logout()
+      user.logout()
     } else {
       setLoginFormState(false)
       setRegisterFormState(false)

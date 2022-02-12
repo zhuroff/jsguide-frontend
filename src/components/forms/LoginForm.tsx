@@ -1,13 +1,11 @@
-import { useState, BaseSyntheticEvent, useContext } from 'react'
+import { useState, BaseSyntheticEvent } from 'react'
+import { observer } from 'mobx-react-lite'
 import { AuthData } from 'types/Global'
 import Input from 'components/input/Input'
 import Button from 'components/button/Button'
-import { Context } from 'index'
-import { observer } from 'mobx-react-lite'
+import user from 'store/User'
 
 const LoginForm = () => {
-  const { store } = useContext(Context)
-
   const [loginData, setLoginData] = useState<AuthData>({
     login: '',
     password: ''
@@ -15,7 +13,7 @@ const LoginForm = () => {
 
   const formSubmit = async (event: BaseSyntheticEvent) => {
     event.preventDefault()
-    store.login(loginData)
+    user.login(loginData)
   }
 
   const updateLoginData = (payload: AuthData) => {

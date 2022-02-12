@@ -1,0 +1,37 @@
+.editor {
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 15px 0;
+    position: sticky;
+    top: 65px;
+    background-color: #fff;
+    z-index: 10;
+    margin-top: -15px;
+  }
+
+  &__action {
+    width: 50px;
+    height: 30px;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &.--active {
+      box-shadow: inset rgba(0, 0, 0, 0.09) 0px 3px 12px;
+    }
+  }
+}

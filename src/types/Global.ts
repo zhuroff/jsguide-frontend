@@ -1,5 +1,3 @@
-import Store from 'store'
-
 type AuthData = Partial<{
   login: string
   password: string
@@ -9,10 +7,6 @@ interface UserData {
   login: string
   _id: string
   isAdmin: boolean
-}
-
-interface State {
-  store: Store
 }
 
 interface ILinks {
@@ -35,7 +29,6 @@ export {
   ILinks,
   AuthData,
   UserData,
-  State,
   IDocumentBasic,
   IRequestConfig
 }

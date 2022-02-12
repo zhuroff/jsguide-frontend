@@ -1,19 +1,17 @@
-import { Context } from 'index'
-import { useContext, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { BaseSyntheticEvent, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 import ArticlesServices from 'services/ArticlesServices'
 import Button from 'components/button/Button'
 import Editor from 'components/editor/Editor'
 import { ArticleData } from 'types/Article'
-import { observer } from 'mobx-react-lite'
+import user from 'store/User'
 
 const InnerPageEdit = () => {
-  const navigate = useNavigate()
   const params = useParams()
 
-  const { store } = useContext(Context)
-
   const [content, setContent] = useState('')
+  const [title, setTitle] = useState(null)
   const [pageData, setPageData] = useState<ArticleData>({
     title: '',
     links: []
@@ -40,7 +38,7 @@ const InnerPageEdit = () => {
       const response = await ArticlesServices.update(
         params.id || '',
         {
-          title: pageData.title,
+          title: title || pageData.title,
           links: pageData.links,
           article: content
         }
@@ -53,17 +51,13 @@ const InnerPageEdit = () => {
   }
 
   useEffect(() => {
-    if (!store.isAuth && params.id) {
-      navigate(`/${params.id}`, { replace: true })
-    } else {
-      fetchArticle(params.id)
-    }
+    fetchArticle(params.id)
   }, [])
 
   return (
     <>
       {
-        (store.isAuth && store.user.isAdmin) &&
+        (user.isAuth && user.user.isAdmin) &&
         <div className="actions">
           <Button
             text="Сохранить"
@@ -78,7 +72,11 @@ const InnerPageEdit = () => {
       }
 
       <article className="article">
-        <h1 contentEditable dangerouslySetInnerHTML={{ __html: pageData.title }}></h1>
+        <h1
+          className="article__title"
+          contentEditable dangerouslySetInnerHTML={{ __html: pageData.title }}
+          onInput={ (event: BaseSyntheticEvent) => setTitle(event.target.innerText) }
+        />
         <Editor
           content={ content }
           updateEditorState={ (value: string) => setContent(value) }

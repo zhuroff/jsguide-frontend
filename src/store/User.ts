@@ -4,7 +4,7 @@ import { AuthResponse } from 'types/Responses'
 import AuthService from 'services/AuthService'
 import axios from 'axios'
 
-export default class Store {
+class User {
   user = {} as UserData
   isAuth = false
 
@@ -77,3 +77,5 @@ export default class Store {
     }
   }
 }
+
+export default new User()

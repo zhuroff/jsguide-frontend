@@ -1,14 +1,13 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 import { ArticlesResponse } from 'types/Responses'
 import ArticlesServices from 'services/ArticlesServices'
 import Button from 'components/button/Button'
-import { Context } from 'index'
-import { observer } from 'mobx-react-lite'
+import user from 'store/User'
 
 const InnerPage = () => {
   const params = useParams()
-  const { store } = useContext(Context)
 
   const [article, setArticle] = useState<ArticlesResponse | null>(null)
 
@@ -31,7 +30,7 @@ const InnerPage = () => {
   return (
     <>
       {
-        (store.isAuth && store.user.isAdmin) &&
+        (user.isAuth && user.user.isAdmin) &&
         <div className="actions">
           <Button
             text="Редактировать"
@@ -48,7 +47,7 @@ const InnerPage = () => {
       <article className="article">
         { article !== null &&
           <>
-            <h1>{ article.title }</h1>
+            <h1 className="article__title">{ article.title }</h1>
             <div dangerouslySetInnerHTML={{__html: article.article}}></div>
           </>
         }

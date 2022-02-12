@@ -1,17 +1,15 @@
-import { useContext, useState, BaseSyntheticEvent } from 'react'
-import { AuthData } from '../../types/Global'
-import { Context } from 'index'
+import { useState, BaseSyntheticEvent } from 'react'
+import { observer } from 'mobx-react-lite'
+import { AuthData } from 'types/Global'
 import Input from 'components/input/Input'
 import Button from 'components/button/Button'
-import { observer } from 'mobx-react-lite'
+import user from 'store/User'
 
 type RegisterData = AuthData & Partial<{
   passwordConfirm: string
 }>
 
 const RegistrationForm = () => {
-  const { store } = useContext(Context)
-
   const [registerData, setRegisterData] = useState<RegisterData>({
     login: '',
     password: '',
@@ -27,7 +25,7 @@ const RegistrationForm = () => {
       return alert('Пароли не совпадают!')
     }
 
-    store.registration({ login, password })
+    user.registration({ login, password })
   }
 
   const updateRegistrationData = (payload: RegisterData) => {

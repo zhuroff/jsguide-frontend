@@ -13,5 +13,18 @@
     position: relative;
     width: 100%;
     max-width: 350px;
+
+    .input {
+      margin-bottom: 0;
+
+      &__text {
+        border-bottom-color: transparent;
+
+        &:focus,
+        &:active {
+          border-bottom-color: #ebebeb;
+        }
+      }
+    }
   }
 }
