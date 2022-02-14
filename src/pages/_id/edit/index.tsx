@@ -5,7 +5,7 @@ import { ILinks } from 'types/Global'
 import { ArticlePage } from 'types/Article'
 import Button from 'components/button/Button'
 import Editor from 'components/editor/Editor'
-import Input from 'components/input/Input'
+import LinkList from 'components/links/LinkList'
 import user from 'store/User'
 import article from 'store/Article'
 
@@ -51,11 +51,7 @@ const InnerPageEdit = () => {
   }
 
   const addLink = () => {
-    const payload: ILinks = {
-      _id: String(articleData.links.length + 1 * 100),
-      title: '',
-      url: ''
-    }
+    const payload: ILinks = { title: '', url: '' }
 
     setArticleData({
       ...articleData,
@@ -63,12 +59,19 @@ const InnerPageEdit = () => {
     })
   }
 
-  const updateLink = (payload: Partial<ILinks>, id: string) => {
+  const updateLink = (payload: Partial<ILinks>, index: number) => {
     setArticleData({
       ...articleData,
-      links: articleData.links.map((link) => (
-        link._id === id ? { ...link, ...payload } : link
+      links: articleData.links.map((link, i) => (
+        i === index ? { ...link, ...payload } : link
       ))
+    })
+  }
+
+  const removeLink = (index: number) => {
+    setArticleData({
+      ...articleData,
+      links: articleData.links.filter((_, i) => index !== i)
     })
   }
 
@@ -129,37 +132,11 @@ const InnerPageEdit = () => {
           }) }
         />
 
-        { (articleData.links && articleData.links.length > 0) &&
-          <ul>
-            {
-              articleData.links.map((link, index) => (
-                <li key={ link._id }>
-                  <Input
-                    type="text"
-                    placeholder="Название"
-                    value={ articleData.links[index].title }
-                    onInput={ (event: BaseSyntheticEvent) => {
-                      updateLink({ title: event.target.value }, link._id as string) }
-                    }
-                  />
-
-                  <Input
-                    type="text"
-                    placeholder="URL"
-                    value={ articleData.links[index].url }
-                    onInput={ (event: BaseSyntheticEvent) => {
-                      updateLink({ url: event.target.value }, link._id as string) }
-                    }
-                  />
-                </li>
-              ))
-            }
-          </ul>
-        }
-
-        <Button
-          text="Добавить ссылку"
-          onClick={ addLink }
+        <LinkList
+          links={ articleData.links }
+          addLink={ addLink }
+          updateLink={ updateLink }
+          removeLink={ removeLink }
         />
       </article>
     </>
