@@ -7,6 +7,7 @@ import axios from 'axios'
 class User {
   user = {} as UserData
   isAuth = false
+  isAuthChecked = false
 
   constructor() {
     makeAutoObservable(this)
@@ -18,6 +19,10 @@ class User {
 
   setUser(user: UserData) {
     this.user = user
+  }
+
+  setAuthChecked() {
+    this.isAuthChecked = true
   }
 
   async login({ login = '', password = '' }: AuthData) {
@@ -72,6 +77,7 @@ class User {
       localStorage.setItem('token', response.data.accessToken)
       this.setAuth(true)
       this.setUser(response.data.user)
+      this.setAuthChecked()
     } catch (error: any) {
       console.log(error.response?.data?.message)
     }

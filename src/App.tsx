@@ -12,6 +12,8 @@ const App = () => {
   useEffect(() => {
     if (localStorage.getItem('token')) {
       user.checkAuth()
+    } else {
+      user.setAuthChecked()
     }
   }, [])
 
@@ -20,7 +22,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={ <MainPage /> }/>
         <Route path="/:id" element={ <InnerPage /> }/>
-        <Route element={ ProtectedRoutes({ isAuth: user.isAuth }) }>
+        <Route element={ ProtectedRoutes({ isAuth: user.isAuth && user.user.isAdmin }) }>
           <Route path="/:id/edit" element={ <InnerPageEdit /> }/>
         </Route>
       </Routes>

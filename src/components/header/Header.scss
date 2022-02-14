@@ -14,10 +14,10 @@
     width: 100%;
     max-width: 350px;
 
-    .input {
+    & > .input {
       margin-bottom: 0;
 
-      &__text {
+      .input__text {
         border-bottom-color: transparent;
 
         &:focus,

@@ -1,19 +1,27 @@
 import api from '../http'
 import { AxiosResponse } from 'axios'
-import { ArticlesResponse, NavigationResponse } from 'types/Responses'
-import { IRequestConfig } from 'types/Global'
-import { ArticleData, ArticleContent } from 'types/Article'
+import { NavigationResponse } from 'types/Responses'
+import { ILinks, IRequestConfig, ResponseMessage } from 'types/Global'
+import { ArticlePage } from 'types/Article'
 
 export default abstract class ArticlesServices {
   static async navigation(config: IRequestConfig): Promise<AxiosResponse<NavigationResponse>> {
     return api.post('api/articles', config)
   }
 
-  static async article(id: string): Promise<AxiosResponse<ArticlesResponse>> {
-    return api.get<ArticlesResponse>(`api/articles/${id}`)
+  static async create(): Promise<AxiosResponse<ArticlePage>> {
+    return api.post('api/articles/create')
   }
 
-  static async update(id: string, payload: ArticleData & ArticleContent): Promise<AxiosResponse<ArticlesResponse>> {
-    return api.patch<ArticlesResponse>(`api/articles/${id}`, payload)
+  static async read(id: string): Promise<AxiosResponse<ArticlePage>> {
+    return api.get<ArticlePage>(`api/articles/${id}`)
+  }
+
+  static async update(payload: ArticlePage): Promise<AxiosResponse<ResponseMessage>> {
+    return api.patch<ResponseMessage>(`api/articles/${payload._id}`, payload)
+  }
+
+  static async remove(id: string): Promise<AxiosResponse<ResponseMessage>> {
+    return api.delete<ResponseMessage>(`api/articles/${id}`)
   }
 }

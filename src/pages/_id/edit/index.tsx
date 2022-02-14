@@ -1,57 +1,83 @@
 import { BaseSyntheticEvent, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-import ArticlesServices from 'services/ArticlesServices'
+import { ILinks } from 'types/Global'
+import { ArticlePage } from 'types/Article'
 import Button from 'components/button/Button'
 import Editor from 'components/editor/Editor'
-import { ArticleData } from 'types/Article'
+import Input from 'components/input/Input'
 import user from 'store/User'
+import article from 'store/Article'
 
 const InnerPageEdit = () => {
   const params = useParams()
+  const navigate = useNavigate()
 
-  const [content, setContent] = useState('')
-  const [title, setTitle] = useState(null)
-  const [pageData, setPageData] = useState<ArticleData>({
-    title: '',
-    links: []
-  })
+  const [articleTitle, setArticleTitle] = useState(null)
+  const [articleData, setArticleData] = useState<ArticlePage>({} as ArticlePage)
 
-  const fetchArticle = async (id: string = '')  => {
-    try {
-      const response = await ArticlesServices.article(id)
-      
-      if (response?.status === 200) {
-        setContent(response.data.article)
-        setPageData({
-          title: response.data.title,
-          links: response.data.links
-        })
-      }
-    } catch (error) {
-      console.error(error)
+  const getAndSetArticle = async (id: string) => {
+    await article.read(id)
+    setArticleData({ ...article.pageData })
+  }
+
+  const update = async (draftStatus: boolean | null = null) => {
+    const payload = {
+      ...articleData,
+      title: articleTitle || articleData.title,
+      isDraft: draftStatus ?? articleData.isDraft,
+      links: articleData.links.map((link) => ({ title: link.title, url: link.url }))
+    }
+
+    const result = await article.update(payload)
+
+    if (result) {
+      console.log(result.message)
     }
   }
 
-  const update = async () => {
-    try {
-      const response = await ArticlesServices.update(
-        params.id || '',
-        {
-          title: title || pageData.title,
-          links: pageData.links,
-          article: content
-        }
-      )
+  const remove = async () => {
+    const result = await article.remove(articleData._id)
 
-      console.log(response)
-    } catch (error) {
-      console.error(error)
+    if (result) {
+      console.log(result.message)
+      navigate('/', { replace: true })
     }
+  }
+
+  const changeDraftState = (payload: { isDraft: boolean }) => {
+    setArticleData({ ...articleData, ...payload })
+    update(payload.isDraft)
+  }
+
+  const addLink = () => {
+    const payload: ILinks = {
+      _id: String(articleData.links.length + 1 * 100),
+      title: '',
+      url: ''
+    }
+
+    setArticleData({
+      ...articleData,
+      links: [...articleData.links, payload]
+    })
+  }
+
+  const updateLink = (payload: Partial<ILinks>, id: string) => {
+    setArticleData({
+      ...articleData,
+      links: articleData.links.map((link) => (
+        link._id === id ? { ...link, ...payload } : link
+      ))
+    })
   }
 
   useEffect(() => {
-    fetchArticle(params.id)
+    if (!article.pageID && params.id) {
+      getAndSetArticle(params.id)
+    } else {
+      setArticleData({ ...article.pageData })
+    }
   }, [])
 
   return (
@@ -61,7 +87,24 @@ const InnerPageEdit = () => {
         <div className="actions">
           <Button
             text="Сохранить"
-            onClick={ update }
+            onClick={ () => update() }
+          />
+
+          {
+            articleData.isDraft
+              ? <Button
+                  text="Опубликовать"
+                  onClick={ () => changeDraftState({ isDraft: false }) }
+                />
+              : <Button
+                  text="В черновики"
+                  onClick={ () => changeDraftState({ isDraft: true }) }
+                />
+          }
+
+          <Button
+            text="Удалить"
+            onClick={ remove }
           />
 
           <Button
@@ -74,12 +117,49 @@ const InnerPageEdit = () => {
       <article className="article">
         <h1
           className="article__title"
-          contentEditable dangerouslySetInnerHTML={{ __html: pageData.title }}
-          onInput={ (event: BaseSyntheticEvent) => setTitle(event.target.innerText) }
+          contentEditable dangerouslySetInnerHTML={{ __html: articleData.title }}
+          onInput={ (event: BaseSyntheticEvent) => setArticleTitle(event.target.innerText) }
         />
+        
         <Editor
-          content={ content }
-          updateEditorState={ (value: string) => setContent(value) }
+          content={ articleData.article }
+          updateEditorState={ (value: string) => setArticleData({
+            ...articleData,
+            article: value
+          }) }
+        />
+
+        { (articleData.links && articleData.links.length > 0) &&
+          <ul>
+            {
+              articleData.links.map((link, index) => (
+                <li key={ link._id }>
+                  <Input
+                    type="text"
+                    placeholder="Название"
+                    value={ articleData.links[index].title }
+                    onInput={ (event: BaseSyntheticEvent) => {
+                      updateLink({ title: event.target.value }, link._id as string) }
+                    }
+                  />
+
+                  <Input
+                    type="text"
+                    placeholder="URL"
+                    value={ articleData.links[index].url }
+                    onInput={ (event: BaseSyntheticEvent) => {
+                      updateLink({ url: event.target.value }, link._id as string) }
+                    }
+                  />
+                </li>
+              ))
+            }
+          </ul>
+        }
+
+        <Button
+          text="Добавить ссылку"
+          onClick={ addLink }
         />
       </article>
     </>

@@ -1,15 +1,13 @@
-import { ILinks } from "./Global";
+import { ILinks } from 'types/Global'
 
-interface ArticleData {
+type ArticlePage = {
+  _id: string
   title: string
+  article: string
+  isDraft: boolean
   links: ILinks[]
 }
 
-interface ArticleContent {
-  article: string
-}
-
 export {
-  ArticleData,
-  ArticleContent
+  ArticlePage
 }

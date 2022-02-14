@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import user from 'store/User'
+import article from 'store/Article'
 import './scss/index.scss'
 
-export const Context = createContext({ user })
+export const Context = createContext({ user, article })
 
 ReactDOM.render(
   <React.StrictMode>
-    <Context.Provider value={ { user } }>
+    <Context.Provider value={ { user, article } }>
       <BrowserRouter>
         <App />
       </BrowserRouter>

@@ -7,4 +7,35 @@
   z-index: 3000;
   background-color: #fff;
   border-right: 1px solid #ebebeb;
+
+  &__logo {
+    height: 65px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 20px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #767676;
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  &__nav {
+
+    &-link {
+      padding: 0 20px;
+      display: block;
+      color: #767676;
+      line-height: 26px;
+
+      &:hover {
+        color: black;
+      }
+
+      &.active {
+        color: black;
+        font-weight: 600;
+      }
+    }
+  }
 }
