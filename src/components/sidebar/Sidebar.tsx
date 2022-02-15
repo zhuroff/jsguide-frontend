@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useContext } from 'react'
+import { Context } from 'index'
 import { NavLink } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-import sidebar from 'store/Sidebar'
 import './Sidebar.scss'
 
 const Sidebar = () => {
-  useEffect(() => {
-    sidebar.read()
-  }, [])
+  const { sidebar } = useContext(Context)
+
+  useEffect(() => { sidebar.read() }, [])
 
   return (
     <aside className="sidebar">

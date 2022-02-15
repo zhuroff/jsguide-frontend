@@ -1,17 +1,28 @@
 import { makeAutoObservable } from 'mobx'
 import { ArticlePage } from 'types/Article'
+import { ILinks } from 'types/Global'
 import ArticlesServices from 'services/ArticlesServices'
 import sidebar from 'store/Sidebar'
 
 class Article {
-  protected articlePage = {} as ArticlePage
+  _id: string = ''
+  title: string = ''
+  article: string = ''
+  isDraft: boolean = false
+  links: ILinks[] = []
 
   constructor() {
     makeAutoObservable(this)
   }
 
   setArticlePage = (data: ArticlePage) => {
-    this.articlePage = data || {}
+    const { _id, title, article, isDraft, links } = data
+    // this.articlePage = data || {}
+    this._id = _id
+    this.title = title
+    this.article = article
+    this.isDraft = isDraft
+    this.links = links
   }
 
   async create() {
@@ -25,8 +36,8 @@ class Article {
 
   async read(id: string) {
     try {
-      const response = await ArticlesServices.read(id)
-      this.setArticlePage(response?.data)
+      const data = await ArticlesServices.read(id)
+      this.setArticlePage(data)
     } catch (error) {
       console.error(error)
     }
@@ -53,11 +64,11 @@ class Article {
   }
 
   get pageID() {
-    return this.articlePage._id
+    return ''//this.articlePage._id
   }
 
   get pageData() {
-    return this.articlePage
+    return //this.articlePage
   }
 }
 

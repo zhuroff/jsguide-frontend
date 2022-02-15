@@ -2,7 +2,7 @@ import api from '../http'
 import { AxiosResponse } from 'axios'
 import { AuthResponse } from 'types/Responses'
 
-export default abstract class AuthService {
+export default class AuthService {
   static async login(login: string, password: string): Promise<AxiosResponse<AuthResponse>> {
     return api.post<AuthResponse>('api/user/login', { login, password })
   }

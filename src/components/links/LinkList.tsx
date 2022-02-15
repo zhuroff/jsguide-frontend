@@ -14,19 +14,22 @@ const LinkList = ({ links, addLink, updateLink, removeLink }: LinkListProps) => 
   return (
     <>
       { links?.length > 0 &&
-        <ul className="article__links">
-          {
-            links.map((link, index) => (
-              <LinkItem
-                key={ index }
-                item={ link }
-                index={ index }
-                updateLink={ updateLink }
-                removeLink={ removeLink }
-              />
-            ))
-          }
-        </ul>
+        <footer className="article__footer">
+          <div className="article__footer-heading">Ссылки по теме:</div>
+          <ul className="article__links">
+            {
+              links.map((link, index) => (
+                <LinkItem
+                  key={ index }
+                  item={ link }
+                  index={ index }
+                  updateLink={ updateLink }
+                  removeLink={ removeLink }
+                />
+              ))
+            }
+          </ul>
+        </footer>
       }
 
       <Button

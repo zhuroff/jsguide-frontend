@@ -1,24 +1,27 @@
-import { BaseSyntheticEvent, useEffect, useState } from 'react'
+import { BaseSyntheticEvent, useEffect, useState, useContext } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
+import { Context } from 'index'
 import { ILinks } from 'types/Global'
 import { ArticlePage } from 'types/Article'
+import Preloader from 'components/preloader/Preloader'
 import Button from 'components/button/Button'
 import Editor from 'components/editor/Editor'
 import LinkList from 'components/links/LinkList'
-import user from 'store/User'
-import article from 'store/Article'
 
 const InnerPageEdit = () => {
   const params = useParams()
   const navigate = useNavigate()
+  const { user, article } = useContext(Context)
 
-  const [articleTitle, setArticleTitle] = useState(null)
-  const [articleData, setArticleData] = useState<ArticlePage>({} as ArticlePage)
+  const [isFetched, setFetchStatus] = useState(false)
+  const [articleTitle, setArticleTitle] = useState<string>(article.title)
+  const [articleData, setArticleData] = useState<ArticlePage>(article)
 
   const getAndSetArticle = async (id: string) => {
+    setFetchStatus(false)
     await article.read(id)
-    setArticleData({ ...article.pageData })
+    setFetchStatus(true)
   }
 
   const update = async (draftStatus: boolean | null = null) => {
@@ -26,7 +29,9 @@ const InnerPageEdit = () => {
       ...articleData,
       title: articleTitle || articleData.title,
       isDraft: draftStatus ?? articleData.isDraft,
-      links: articleData.links.map((link) => ({ title: link.title, url: link.url }))
+      links: articleData.links?.length
+        ? articleData.links.map((link) => ({ title: link.title, url: link.url }))
+        : []
     }
 
     const result = await article.update(payload)
@@ -48,6 +53,13 @@ const InnerPageEdit = () => {
   const changeDraftState = (payload: { isDraft: boolean }) => {
     setArticleData({ ...articleData, ...payload })
     update(payload.isDraft)
+  }
+
+  const updateArticle = (value: string) => {
+    setArticleData({
+      ...articleData,
+      article: value
+    })
   }
 
   const addLink = () => {
@@ -76,15 +88,18 @@ const InnerPageEdit = () => {
   }
 
   useEffect(() => {
-    if (!article.pageID && params.id) {
+    if (!article._id && params.id) {
       getAndSetArticle(params.id)
     } else {
-      setArticleData({ ...article.pageData })
+      setArticleData({ ...article })
+      setFetchStatus(true)
     }
   }, [])
 
   return (
     <>
+      { !isFetched && <Preloader /> }
+
       {
         (user.isAuth && user.user.isAdmin) &&
         <div className="actions">
@@ -126,10 +141,7 @@ const InnerPageEdit = () => {
         
         <Editor
           content={ articleData.article }
-          updateEditorState={ (value: string) => setArticleData({
-            ...articleData,
-            article: value
-          }) }
+          updateEditorState={ updateArticle }
         />
 
         <LinkList
