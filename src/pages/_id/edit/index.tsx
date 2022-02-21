@@ -24,8 +24,8 @@ const InnerPageEdit = () => {
     setFetchStatus(true)
   }
 
-  const update = async (draftStatus: boolean | null = null) => {
-    const payload = {
+  const getPayload = (draftStatus: boolean | null) => {
+    return {
       ...articleData,
       title: articleTitle || articleData.title,
       isDraft: draftStatus ?? articleData.isDraft,
@@ -33,21 +33,28 @@ const InnerPageEdit = () => {
         ? articleData.links.map((link) => ({ title: link.title, url: link.url }))
         : []
     }
-
-    const result = await article.update(payload)
-
-    if (result) {
-      console.log(result.message)
-    }
   }
 
-  const remove = async () => {
-    const result = await article.remove(articleData._id)
+  const update = async (draftStatus: boolean | null = null) => {
+    article.update(getPayload(draftStatus))
+      .then((result) => console.log(result))
+      .catch((ignore) => ignore)
 
-    if (result) {
-      console.log(result.message)
-      navigate('/', { replace: true })
-    }
+    // if (result) {
+    //   console.log(result.message)
+    // }
+  }
+
+  const remove = () => {
+    article.remove(articleData._id)
+      .then((result) => console.log(result))
+      .then(_ => navigate('/', { replace: true }))
+      .catch((ignore) => ignore)
+
+    // if (result) {
+    //   console.log(result.message)
+    //   navigate('/', { replace: true })
+    // }
   }
 
   const changeDraftState = (payload: { isDraft: boolean }) => {
@@ -56,18 +63,13 @@ const InnerPageEdit = () => {
   }
 
   const updateArticle = (value: string) => {
-    setArticleData({
-      ...articleData,
-      article: value
-    })
+    setArticleData({ ...articleData, article: value })
   }
 
   const addLink = () => {
-    const payload: ILinks = { title: '', url: '' }
-
     setArticleData({
       ...articleData,
-      links: [...articleData.links, payload]
+      links: [...articleData.links, { title: '', url: '' }]
     })
   }
 

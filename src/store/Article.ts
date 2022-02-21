@@ -63,10 +63,6 @@ class Article {
     }
   }
 
-  get pageID() {
-    return ''//this.articlePage._id
-  }
-
   get pageData() {
     return //this.articlePage
   }

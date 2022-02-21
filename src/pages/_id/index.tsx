@@ -11,10 +11,11 @@ const InnerPage = () => {
 
   const [isFetched, setFetchStatus] = useState(false)
 
-  const fetchArticle = async (id: string) => {
+  const fetchArticle = (id: string) => {
     setFetchStatus(false)
-    await article.read(id)
-    setFetchStatus(true)
+    article.read(id)
+      .then(_ => setFetchStatus(true))
+      .catch((ignore) => ignore)
   }
 
   useEffect(() => {

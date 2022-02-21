@@ -1,7 +1,7 @@
 import { ILinks } from 'types/Global'
 
 type ArticlePage = {
-  _id: string
+  readonly _id: string
   title: string
   article: string
   isDraft: boolean

@@ -8,20 +8,20 @@ type ResponseMessage = {
 }
 
 interface UserData {
+  readonly _id: string
+  readonly isAdmin: boolean
   login: string
-  _id: string
-  isAdmin: boolean
 }
 
 interface ILinks {
-  _id?: string
+  readonly _id?: string
   title: string
   url: string
 }
 
 interface IDocumentBasic {
-  _id: string
-  title: string
+  readonly _id: string
+  readonly title: string
 }
 
 interface IRequestConfig {

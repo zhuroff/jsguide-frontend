@@ -10,8 +10,8 @@ const MainPage = () => {
   const createAndProceedArticle = async () => {
     await article.create()
     
-    if (article.pageID) {
-      navigate(`/${article.pageID}/edit`, { replace: true })
+    if (article._id) {
+      navigate(`/${article._id}/edit`, { replace: true })
     }
   }
 
