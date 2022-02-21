@@ -31,6 +31,19 @@ class Sidebar {
   get navbar() {
     return this.navigation
   }
+
+  get isDraft() {
+    return this.requestConfig.isDraft
+  }
+
+  setRequestConfig(config: Partial<IRequestConfig>) {
+    this.requestConfig = {
+      ...this.requestConfig,
+      ...config
+    }
+
+    this.read()
+  }
 }
 
 export default new Sidebar()

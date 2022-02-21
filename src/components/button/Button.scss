@@ -25,4 +25,10 @@
     white-space: nowrap;
     font-size: 14px;
   }
+
+  &[disabled] {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+  }
 }

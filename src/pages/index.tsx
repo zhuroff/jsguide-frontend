@@ -1,11 +1,13 @@
 import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { Context } from 'index'
+
 import Button from 'components/button/Button'
-import user from 'store/User'
-import article from 'store/Article'
 
 const MainPage = () => {
   const navigate = useNavigate()
+  const { user, sidebar, article } = useContext(Context)
 
   const createAndProceedArticle = async () => {
     await article.create()
@@ -27,12 +29,14 @@ const MainPage = () => {
 
           <Button
             text="Черновики"
-            onClick={ () => console.log('Черновики') }
+            isDisabled={ sidebar.isDraft }
+            onClick={ () => sidebar.setRequestConfig({ isDraft: true }) }
           />
 
           <Button
             text="Опубликованные"
-            onClick={ () => console.log('Опубликованные') }
+            isDisabled={ !sidebar.isDraft }
+            onClick={ () => sidebar.setRequestConfig({ isDraft: false }) }
           />
         </div>
       }
