@@ -79,7 +79,9 @@ class User {
       this.setUser(response.data.user)
       this.setAuthChecked()
     } catch (error: any) {
-      console.log(error.response?.data?.message)
+      localStorage.removeItem('token')
+      this.setAuth(false)
+      this.setAuthChecked()
     }
   }
 }
