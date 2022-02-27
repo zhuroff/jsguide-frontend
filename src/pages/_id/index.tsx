@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { Context } from 'index'
 import Preloader from 'components/preloader/Preloader'
 import Button from 'components/button/Button'
+import { NavLink } from 'react-router-dom'
 
 const InnerPage = () => {
   const params = useParams()
@@ -38,6 +39,29 @@ const InnerPage = () => {
 
       <article className="article">
         <h1 className="article__title">{ article.title }</h1>
+
+        {
+          article.children.length > 0 &&
+          <div className="article__children">
+            <div className="article__children-title">Оглавление</div>
+            <ul className="article__children-list">
+              {
+                article.children.map((article) => (
+                  <li
+                    key={ article._id }
+                    className="article__children-item"
+                  >
+                    <NavLink
+                      to={ `/${article._id}` }
+                      className="article__children-link"
+                    >{ article.title }</NavLink>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        }
+
         <div className="ProseMirror" dangerouslySetInnerHTML={{__html: article.article}}></div>
 
         { article.links.length > 0 &&
@@ -46,7 +70,10 @@ const InnerPage = () => {
             <ul className="article__footer-links">
               {
                 article.links.map((link) => (
-                  <li className="article__footer-item">
+                  <li
+                    key={ link._id }
+                    className="article__footer-item"
+                  >
                     <a
                       href={ link.url }
                       className="article__footer-link"

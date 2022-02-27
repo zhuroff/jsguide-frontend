@@ -1,4 +1,4 @@
-import { IDocumentBasic, UserData } from 'types/Global'
+import { DocumentBasic, UserData } from 'types/Global'
 
 interface AuthResponse {
   accessToken: string
@@ -11,7 +11,7 @@ interface NavigationResponse {
   page: number
   totalDocs: number
   totalPages: number
-  docs: IDocumentBasic[]
+  docs: DocumentBasic[]
 }
 
 export {

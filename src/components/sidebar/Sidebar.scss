@@ -24,6 +24,11 @@
 
     &-item {
       margin-bottom: 7px;
+
+      & > .sidebar__nav-list {
+        padding-left: 20px;
+        margin-top: 7px;
+      }
     }
 
     &-link {

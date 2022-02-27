@@ -1,33 +1,38 @@
 import { makeAutoObservable } from 'mobx'
 import { ArticlePage } from 'types/Article'
-import { ILinks } from 'types/Global'
+import { DocumentItem, ILinks } from 'types/Global'
 import ArticlesServices from 'services/ArticlesServices'
 import sidebar from 'store/Sidebar'
+import ArticleDTO from 'dtos/article.dto'
 
-class Article {
-  _id: string = ''
-  title: string = ''
-  article: string = ''
-  isDraft: boolean = false
-  links: ILinks[] = []
+class Article implements ArticleDTO {
+  _id = ''
+  title = ''
+  article = ''
+  isDraft = false
+  links = [] as ILinks[]
+  parent = null as DocumentItem | null
+  children = [] as DocumentItem[]
 
   constructor() {
     makeAutoObservable(this)
   }
 
   setArticlePage = (data: ArticlePage) => {
-    const { _id, title, article, isDraft, links } = data
-    // this.articlePage = data || {}
+    const { _id, title, article, isDraft, links, parent, children } = data
+
     this._id = _id
     this.title = title
     this.article = article
     this.isDraft = isDraft
     this.links = links
+    this.parent = parent
+    this.children = children
   }
 
-  async create() {
+  async create(parent: null | string = null) {
     try {
-      const response = await ArticlesServices.create()
+      const response = await ArticlesServices.create(parent)
       this.setArticlePage(response?.data)
     } catch (error) {
       console.error(error)
@@ -53,6 +58,11 @@ class Article {
     }
   }
 
+  async addSubPage(id: string) {
+    await this.create(id)
+    return new Article()
+  }
+
   async remove(id: string) {
     try {
       const response = await ArticlesServices.remove(id)
@@ -63,8 +73,14 @@ class Article {
     }
   }
 
-  get pageData() {
-    return //this.articlePage
+  get articleData() {
+    return {
+      _id: this._id,
+      title: this.title,
+      article: this.article,
+      isDraft: this.isDraft,
+      links: this.links
+    }
   }
 }
 

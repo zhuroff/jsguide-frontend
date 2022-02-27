@@ -1,17 +1,17 @@
 import api from '../http'
 import { AxiosResponse } from 'axios'
 import { NavigationResponse } from 'types/Responses'
-import { ILinks, IRequestConfig, ResponseMessage } from 'types/Global'
+import { RequestConfig, ResponseMessage } from 'types/Global'
 import { ArticlePage } from 'types/Article'
 import ArticleDTO from 'dtos/article.dto'
 
 export default class ArticlesServices {
-  static async navigation(config: IRequestConfig): Promise<AxiosResponse<NavigationResponse>> {
+  static async navigation(config: RequestConfig): Promise<AxiosResponse<NavigationResponse>> {
     return api.post('api/articles', config)
   }
 
-  static async create(): Promise<AxiosResponse<ArticlePage>> {
-    return api.post('api/articles/create')
+  static async create(id: null | string): Promise<AxiosResponse<ArticlePage>> {
+    return api.post('api/articles/create', { id })
   }
 
   static async read(id: string): Promise<ArticleDTO> {

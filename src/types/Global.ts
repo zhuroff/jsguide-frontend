@@ -19,12 +19,17 @@ interface ILinks {
   url: string
 }
 
-interface IDocumentBasic {
+type DocumentItem = {
   readonly _id: string
   readonly title: string
 }
 
-interface IRequestConfig {
+type DocumentBasic = DocumentItem & {  
+  readonly parent: string | null
+  children: (string | DocumentBasic)[]
+}
+
+type RequestConfig = {
   isDraft: boolean
   page: number,
   limit: number,
@@ -35,7 +40,8 @@ export {
   ILinks,
   AuthData,
   UserData,
-  IDocumentBasic,
-  IRequestConfig,
+  DocumentItem,
+  DocumentBasic,
+  RequestConfig,
   ResponseMessage
 }

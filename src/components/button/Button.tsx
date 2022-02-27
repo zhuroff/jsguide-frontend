@@ -4,17 +4,25 @@ import './Button.scss'
 type ButtonProps = {
   text: string
   type?: 'button' | 'submit' | 'reset'
+  category?: 'danger' | 'warning' | 'default'
   href?: string | null
   isDisabled?: boolean
   onClick?: () => void
 }
 
-const Button = ({ text, type = 'button', href = null, isDisabled = false, onClick }: ButtonProps) => {
+const Button = ({
+  text,
+  type = 'button',
+  category = 'default',
+  href = null,
+  isDisabled = false,
+  onClick }: ButtonProps
+) => {
   return (
     <>
       { !href
         ? <button
-            className="button"
+            className={ `button --${category}` }
             type={ type }
             disabled={ isDisabled }
             onClick={ onClick }
@@ -23,7 +31,7 @@ const Button = ({ text, type = 'button', href = null, isDisabled = false, onClic
           </button>
         : <NavLink
             to={ href }
-            className="button"
+            className={ `button --${category}` }
           >
             <span className="button__text">{ text }</span>
           </NavLink>

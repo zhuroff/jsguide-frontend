@@ -1,10 +1,10 @@
 import { makeAutoObservable } from 'mobx'
-import { IDocumentBasic, IRequestConfig } from 'types/Global'
+import { DocumentBasic, RequestConfig } from 'types/Global'
 import ArticlesServices from 'services/ArticlesServices'
 
 class Sidebar {
-  protected navigation = [] as IDocumentBasic[]
-  protected requestConfig: IRequestConfig = {
+  protected navigation = [] as DocumentBasic[]
+  protected requestConfig: RequestConfig = {
     isDraft: false,
     page: 1,
     limit: 30,
@@ -13,10 +13,6 @@ class Sidebar {
 
   constructor() {
     makeAutoObservable(this)
-  }
-
-  setNavigation = (data: IDocumentBasic[]) => {
-    this.navigation = data
   }
 
   async read() {
@@ -28,6 +24,36 @@ class Sidebar {
     }
   }
 
+  setNavigation = (data: DocumentBasic[]) => {
+    this.navigation = this.navigationTree(data)
+  }
+
+  navigationTree(data: DocumentBasic[]) {
+    const children: DocumentBasic[] = []
+    const parents: DocumentBasic[] = []
+
+    return data.reduce<DocumentBasic[]>((acc, next) => {
+      next.parent ? children.push(next) : acc.push(next)
+
+      if (next.children.length) {
+        parents.push(next)
+        next.children = [
+          ...children.filter((child) => (
+            child.parent === next._id
+          ))
+        ]
+      }
+
+      parents.forEach((parent) => {
+        if (parent._id === next.parent) {
+          parent.children = [...parent.children, next]
+        }
+      })
+
+      return acc
+    }, [])
+  }
+
   get navbar() {
     return this.navigation
   }
@@ -36,7 +62,7 @@ class Sidebar {
     return this.requestConfig.isDraft
   }
 
-  setRequestConfig(config: Partial<IRequestConfig>) {
+  setRequestConfig(config: Partial<RequestConfig>) {
     this.requestConfig = {
       ...this.requestConfig,
       ...config

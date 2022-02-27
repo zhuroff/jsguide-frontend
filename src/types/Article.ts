@@ -1,4 +1,4 @@
-import { ILinks } from 'types/Global'
+import { DocumentItem, ILinks } from 'types/Global'
 
 type ArticlePage = {
   readonly _id: string
@@ -6,6 +6,8 @@ type ArticlePage = {
   article: string
   isDraft: boolean
   links: ILinks[]
+  parent: DocumentItem | null
+  children: DocumentItem[]
 }
 
 export {

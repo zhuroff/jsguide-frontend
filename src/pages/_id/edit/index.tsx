@@ -1,4 +1,4 @@
-import { BaseSyntheticEvent, useEffect, useState, useContext } from 'react'
+import { BaseSyntheticEvent, useEffect, useState, useContext, useReducer } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { Context } from 'index'
@@ -15,19 +15,23 @@ const InnerPageEdit = () => {
   const { user, article } = useContext(Context)
 
   const [isFetched, setFetchStatus] = useState(false)
-  const [articleTitle, setArticleTitle] = useState<string>(article.title)
-  const [articleData, setArticleData] = useState<ArticlePage>(article)
+  const [preRemoving, setPreRemoving] = useState(false)
+  // const [articleTitle, setArticleTitle] = useState<string>('')
+  const [articleData, setArticleData] = useReducer(
+    (articleData: ArticlePage, payload: Partial<ArticlePage>) => ({ ...articleData, ...payload }),
+    {} as ArticlePage
+  )
 
   const getAndSetArticle = async (id: string) => {
     setFetchStatus(false)
     await article.read(id)
+    setArticleData(article.articleData)
     setFetchStatus(true)
   }
 
-  const getPayload = (draftStatus: boolean | null) => {
+  const getArticlePayload = (draftStatus: boolean | null) => {
     return {
       ...articleData,
-      title: articleTitle || articleData.title,
       isDraft: draftStatus ?? articleData.isDraft,
       links: articleData.links?.length
         ? articleData.links.map((link) => ({ title: link.title, url: link.url }))
@@ -36,46 +40,45 @@ const InnerPageEdit = () => {
   }
 
   const update = async (draftStatus: boolean | null = null) => {
-    article.update(getPayload(draftStatus))
+    article.update(getArticlePayload(draftStatus))
       .then((result) => console.log(result))
       .catch((ignore) => ignore)
+  }
 
-    // if (result) {
-    //   console.log(result.message)
-    // }
+  const addSubPage = async () => {
+    setFetchStatus(false)
+    await article.addSubPage(String(params.id))
+    navigate(`/${article._id}/edit`, { replace: true })
+    setArticleData(article.articleData)
+    setFetchStatus(true)
   }
 
   const remove = () => {
     article.remove(articleData._id)
-      .then((result) => console.log(result))
-      .then(_ => navigate('/', { replace: true }))
+      .then((result) => {
+        console.log(result)
+        navigate('/', { replace: true })
+      })
       .catch((ignore) => ignore)
-
-    // if (result) {
-    //   console.log(result.message)
-    //   navigate('/', { replace: true })
-    // }
   }
 
   const changeDraftState = (payload: { isDraft: boolean }) => {
-    setArticleData({ ...articleData, ...payload })
+    setArticleData(payload)
     update(payload.isDraft)
   }
 
   const updateArticle = (value: string) => {
-    setArticleData({ ...articleData, article: value })
+    setArticleData({ article: value })
   }
 
   const addLink = () => {
     setArticleData({
-      ...articleData,
       links: [...articleData.links, { title: '', url: '' }]
     })
   }
 
   const updateLink = (payload: Partial<ILinks>, index: number) => {
     setArticleData({
-      ...articleData,
       links: articleData.links.map((link, i) => (
         i === index ? { ...link, ...payload } : link
       ))
@@ -84,7 +87,6 @@ const InnerPageEdit = () => {
 
   const removeLink = (index: number) => {
     setArticleData({
-      ...articleData,
       links: articleData.links.filter((_, i) => index !== i)
     })
   }
@@ -93,7 +95,7 @@ const InnerPageEdit = () => {
     if (!article._id && params.id) {
       getAndSetArticle(params.id)
     } else {
-      setArticleData({ ...article })
+      setArticleData(article)
       setFetchStatus(true)
     }
   }, [])
@@ -123,36 +125,60 @@ const InnerPageEdit = () => {
           }
 
           <Button
-            text="Удалить"
-            onClick={ remove }
+            text="+ Подстраница"
+            onClick={ addSubPage }
           />
+          
+          {
+            !preRemoving
+              ? <Button
+                  text="Удалить"
+                  onClick={ () => setPreRemoving(true) }
+                />
+              : <Button
+                  category="danger"
+                  text="Подтвердить удаление"
+                  onClick={ remove }
+                />
+          }
 
-          <Button
-            text="Отмена"
-            href={ `/${params.id}` }
-          />
+          {
+            !preRemoving
+              ? <Button
+                  text="Отмена"
+                  href={ `/${params.id}` }
+                />
+              : <Button
+                  category="warning"
+                  text="Отмена"
+                  onClick={ () => setPreRemoving(false) }
+                />
+          }
         </div>
       }
 
-      <article className="article">
-        <h1
-          className="article__title"
-          contentEditable dangerouslySetInnerHTML={{ __html: articleData.title }}
-          onInput={ (event: BaseSyntheticEvent) => setArticleTitle(event.target.innerText) }
-        />
-        
-        <Editor
-          content={ articleData.article }
-          updateEditorState={ updateArticle }
-        />
+      { isFetched &&
+        <article className="article">
+          <textarea
+            rows={ 1 }
+            className="article__title"
+            defaultValue={ articleData.title }
+            onInput={ (event: BaseSyntheticEvent) => setArticleData({ title: event.target.value }) }
+          ></textarea>
+          
+          <Editor
+            content={ articleData.article }
+            updateEditorState={ updateArticle }
+          />
 
-        <LinkList
-          links={ articleData.links }
-          addLink={ addLink }
-          updateLink={ updateLink }
-          removeLink={ removeLink }
-        />
-      </article>
+          <LinkList
+            links={ articleData.links }
+            addLink={ addLink }
+            updateLink={ updateLink }
+            removeLink={ removeLink }
+          />
+        </article>
+      }
     </>
   )
 }
